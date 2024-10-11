@@ -1,11 +1,14 @@
 import "reflect-metadata"
 import express from 'express';
+import cors from 'cors';
 import { AppDataSource } from "./data-source"
 import userRoutes from './routes/UserRoutes';
 
 
 const app = express();
-const port = 3000;
+const port = 8000;
+// Configuração básica do CORS
+app.use(cors());
 
 app.use(express.json());
 
