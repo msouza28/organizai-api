@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { AppDataSource } from '../data-source';
 import { User } from '../entities/User';
 import { Categoria } from '../entities/Categoria';
+import { validate } from 'class-validator';
+import { QueryFailedError } from 'typeorm';
 
 export class UserController {
   private userRepository = AppDataSource.getRepository(User);
@@ -20,6 +22,14 @@ export class UserController {
       const newUser = new User();
       Object.assign(newUser, userDto); // copia o dto para a nova instancia
 
+       // Validar a entidade
+       const errors = await validate(newUser);
+       if (errors.length > 0) {
+         const errorMessages = errors.map(error => 
+           Object.values(error.constraints || {})
+         ).flat();
+         return res.status(400).json({ errors: errorMessages });
+       }
       // Buscar todas as categorias
       const categorias = await this.catRepository.find();
 
@@ -38,6 +48,9 @@ export class UserController {
       res.status(201).json(savedUser);
     } catch (error) {
       console.error(error);
+      if (error instanceof QueryFailedError && error.message.includes('duplicate key value violates unique constraint')) {
+        return res.status(409).json({ message: "Este email já está cadastrado" });
+      }
       res.status(500).json({ message: "Erro ao criar usuário" });
     }
   };
