@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from '../data-source';
 import { User } from '../entities/User';
+import { Categoria } from '../entities/Categoria';
 
 export class UserController {
   private userRepository = AppDataSource.getRepository(User);
+  private catRepository = AppDataSource.getRepository(Categoria);
+  
 
   constructor() {
     this.autenticacaoUser = this.autenticacaoUser.bind(this);
@@ -11,12 +14,31 @@ export class UserController {
 
   createUser = async (req: Request, res: Response) => {
     try {
-      const user = this.userRepository.create(req.body);
-      const results = await this.userRepository.save(user);
-      res.status(201).json(results);
+      const userDto = req.body;
+
+      // Criar uma nova instância de User
+      const newUser = new User();
+      Object.assign(newUser, userDto); // copia o dto para a nova instancia
+
+      // Buscar todas as categorias
+      const categorias = await this.catRepository.find();
+
+      // Associar as categorias ao novo usuário
+      newUser.categorias = categorias;
+
+      // Salvar o usuário com as categorias associadas
+      const savedUser = await this.userRepository.save(newUser);
+
+      // Buscar o usuário salvo com as categorias caso queria retonar o usuário com as categorias
+      // const userWithCategories = await this.userRepository.findOne({
+      //   where: { UserId: savedUser.UserId },
+      //   relations: ['categorias']
+      // });
+
+      res.status(201).json(savedUser);
     } catch (error) {
       console.error(error);
-       res.status(500).json({ message: "Erro ao criar usuário" });
+      res.status(500).json({ message: "Erro ao criar usuário" });
     }
   };
 

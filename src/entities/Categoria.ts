@@ -1,10 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany, PrimaryColumn } from "typeorm"
 import { User } from "./User"
 import { Transacao } from "./Transacao"
 
 @Entity()
 export class Categoria {
-    @PrimaryGeneratedColumn()
+    @PrimaryColumn()
     CategoriaId: number
 
     @Column()
