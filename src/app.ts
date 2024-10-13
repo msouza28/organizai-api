@@ -6,7 +6,7 @@ import userRoutes from './routes/UserRoutes';
 
 
 const app = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8080;
 // Configuração básica do CORS
 app.use(cors());
 
