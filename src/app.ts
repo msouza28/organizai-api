@@ -6,7 +6,7 @@ import userRoutes from './routes/UserRoutes';
 
 
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 // Configuração básica do CORS
 app.use(cors());
 
@@ -17,8 +17,7 @@ AppDataSource.initialize().then(async () => {
 
     app.use('/users', userRoutes);
 
-    app.listen(port, () => {
-        console.log(`Servidor rodando em http://localhost:${port}`);
-    });
+    
+    app.listen(port, () => console.log(`Server running on port ${port}`));
 
 }).catch(error => console.log(error))
