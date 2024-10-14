@@ -2,11 +2,11 @@
   "name": "organizai-api",
   "version": "1.0.0",
   "main": "dist/app.js",
+  "type": "commonjs",
   "scripts": {
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
     "build": "tsc",
-    "postinstall": "npm run build",
     "typeorm": "typeorm-ts-node-commonjs",
     "migration:generate": "npm run typeorm migration:generate -- -d src/data-source.ts",
     "migration:run": "npm run typeorm migration:run -- -d src/data-source.ts"

@@ -10,9 +10,9 @@ const config: DataSourceOptions = {
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: ["src/entities/**/*.ts"],
-  migrations: ["src/migrations/**/*.ts"],
-  subscribers: ["src/subscribers/**/*.ts"],
+  entities: ["dist/entities/**/*.js"],
+  migrations: ["dist/migrations/**/*.js"],
+  subscribers: ["dist/subscribers/**/*.js"],
   synchronize: false,
   logging: true,
   ssl: {
