@@ -2,7 +2,7 @@ import { DataSourceOptions } from "typeorm";
 import dotenv from 'dotenv';
 
 dotenv.config();
-
+const isProd = process.env.NODE_ENV === 'production';
 const config: DataSourceOptions = {
   type: "postgres",
   host: process.env.DB_HOST,
@@ -10,9 +10,15 @@ const config: DataSourceOptions = {
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: ["dist/entities/**/*.js"],
-  migrations: ["dist/migrations/**/*.js"],
-  subscribers: ["dist/subscribers/**/*.js"],
+  entities: [
+    isProd ? "dist/entities/**/*.js" : "src/entities/**/*.ts"
+  ],
+  migrations: [
+    isProd ? "dist/migrations/**/*.js" : "src/migrations/**/*.ts"
+  ],
+  subscribers: [
+    isProd ? "dist/subscribers/**/*.js" : "src/subscribers/**/*.ts"
+  ],
   synchronize: false,
   logging: true,
   ssl: {

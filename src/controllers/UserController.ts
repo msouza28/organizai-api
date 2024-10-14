@@ -4,6 +4,7 @@ import { User } from '../entities/User';
 import { Categoria } from '../entities/Categoria';
 import { validate } from 'class-validator';
 import { QueryFailedError } from 'typeorm';
+import bcrypt from 'bcrypt';
 
 export class UserController {
   private userRepository = AppDataSource.getRepository(User);
@@ -36,6 +37,9 @@ export class UserController {
       // Associar as categorias ao novo usuário
       newUser.categorias = categorias;
 
+      const saltRounds = 10; // Define o número de rounds de salt
+      newUser.senha = await bcrypt.hash(newUser.senha, saltRounds);
+      
       // Salvar o usuário com as categorias associadas
       const savedUser = await this.userRepository.save(newUser);
 
@@ -97,12 +101,21 @@ export class UserController {
         return res.status(400).json({ message: "Email e senha são obrigatórios" });
       }
 
-      const user = await this.userRepository.findOneBy({ email, senha });
+      // Busca o usuário pelo email
+      const user = await this.userRepository.findOneBy({ email });
 
       if (!user) {
         return res.status(404).json({ message: "Usuário não encontrado" });
       }
 
+      // Verifica se a senha está correta
+      const senhaValida = await bcrypt.compare(senha, user.senha);
+
+      if (!senhaValida) {
+        return res.status(401).json({ message: "Senha incorreta" });
+      }
+
+      // Caso a autenticação seja bem-sucedida
       return res.sendStatus(200); // Sucesso, sem retorno de dados
     } catch (error) {
       console.error(error);

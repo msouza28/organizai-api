@@ -4,10 +4,12 @@ FROM node:20-alpine
 # Definir o diretório de trabalho
 WORKDIR /usr/src/app
 
+
 # Copiar o package.json e package-lock.json antes de instalar as dependências
 # para aproveitar o cache de camadas do Docker
 COPY package*.json ./
 
+ENV NODE_ENV=production
 # Instalar dependências de produção e remover as de desenvolvimento
 RUN npm install
 
