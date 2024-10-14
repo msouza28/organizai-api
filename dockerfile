@@ -9,7 +9,9 @@ WORKDIR /usr/src/app
 # para aproveitar o cache de camadas do Docker
 COPY package*.json ./
 
-ENV NODE_ENV=production
+ENV NODE_ENV=prod
+
+RUN rm -rf node_modules
 # Instalar dependências de produção e remover as de desenvolvimento
 RUN npm install
 

@@ -4,7 +4,7 @@ import { User } from '../entities/User';
 import { Categoria } from '../entities/Categoria';
 import { validate } from 'class-validator';
 import { QueryFailedError } from 'typeorm';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 export class UserController {
   private userRepository = AppDataSource.getRepository(User);
