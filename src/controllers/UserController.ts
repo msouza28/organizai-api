@@ -11,9 +11,6 @@ export class UserController {
   private catRepository = AppDataSource.getRepository(Categoria);
   
 
-  constructor() {
-    this.autenticacaoUser = this.autenticacaoUser.bind(this);
-}
 
   createUser = async (req: Request, res: Response) => {
     try {
@@ -74,22 +71,26 @@ export class UserController {
 
   findUserByEmail = async (req: Request, res: Response) => {
     try {
-        const { email } = req.body; // Captura o email do corpo da requisição
+        const { email } = req.params; // Captura o email do path (req.params)
     
         if (!email) {
-           res.status(400).json({ message: "Email é obrigatório" });
+           return res.status(400).json({ message: "Email é obrigatório" });
         }
     
         const user = await this.userRepository.findOneBy({ email });
     
         if (!user) {
-           res.status(404).json({ message: "Usuário não encontrado" });
+           return res.status(404).json({ message: "Usuário não encontrado" });
+        } else {
+          const userWithCategoriesAndQuiz = await this.userRepository.findOne({
+            where: { UserId: user.UserId },
+            relations: ['categorias', 'quiz']
+          });
+          return res.json(userWithCategoriesAndQuiz);
         }
-
-        res.json(user);
       } catch (error) {
         console.error(error);
-         res.status(500).json({ message: "Erro ao buscar usuário" });
+         return res.status(500).json({ message: "Erro ao buscar usuário" });
       }
   };
 

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm"
 import { User } from "./User"
 
 @Entity()
@@ -12,25 +12,25 @@ export class Quiz {
     @Column()
     isAnswered: boolean
 
-    @Column()
+    @Column({ nullable: true })
     isCadUni: boolean
 
-    @Column("decimal", { precision: 10, scale: 2 })
+    @Column("decimal", { precision: 10, scale: 2, nullable: true })
     rendaMensal: number
 
-    @Column()
+    @Column({ nullable: true })
     qtnPorFamilia: number
 
-    @Column()
+    @Column({ nullable: true })
     isOlder: boolean
 
-    @Column()
+    @Column({ nullable: true })
     isRural: boolean
 
     @Column("date")
     dataCriacao: Date
 
-    @ManyToOne(() => User, user => user.quizzes)
+    @OneToOne(() => User, user => user.quiz)
     @JoinColumn({ name: "UserId" })
     user: User
 }
