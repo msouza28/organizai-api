@@ -10,7 +10,7 @@ export class Quiz {
     UserId: number
 
     @Column()
-    isAnswered: boolean
+    isAnswered: boolean 
 
     @Column({ nullable: true })
     isCadUni: boolean
