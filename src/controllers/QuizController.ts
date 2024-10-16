@@ -11,6 +11,14 @@ export class QuizController {
 
             const quizDto = req.body;
 
+            // Verifica se já existe um quiz para esse UserId
+            const existingQuiz = await this.quizRepository.findOneBy({ UserId: quizDto.UserId });
+            
+            if (existingQuiz) {
+                // Se já houver um quiz, retorna 200 com uma mensagem apropriada
+                return res.status(200).json({ message: "Um quiz já existe para este usuário"});
+            }
+
             const newQuiz = new Quiz();
             Object.assign(newQuiz, quizDto);
 
@@ -18,10 +26,6 @@ export class QuizController {
 
             res.status(201).json(savedQuiz);
         }catch (error) {
-            console.error(error);
-            if (error instanceof QueryFailedError && error.message.includes('duplicate key value violates unique constraint')) {
-                return res.status(409).json({ message: "Um quiz ja foi respondido para esse usuário"  });
-            }
             // Logando a mensagem de erro no caso de erro 500
             const errorMessage = error instanceof Error ? error.message : "Erro desconhecido";
             console.error(`Erro ao criar quiz do usuário: ${errorMessage}`);
